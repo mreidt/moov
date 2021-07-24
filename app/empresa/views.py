@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import Empresa
+from core.models import Empresa, Motorista
 from empresa import serializers
 
 
@@ -28,7 +28,17 @@ class EmpresaViewSet(viewsets.ModelViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-        # serializer.save(cnpj=self.limpa_cnpj(self.request.data.get('cnpj')))
+
+class MotoristaViewSet(viewsets.ModelViewSet):
+    """Gerencia os motoristas na base de dados"""
+    serializer_class = serializers.MotoristaSerializer
+    queryset = Motorista.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        """Cria um novo motorista"""
+        serializer.save()
 
 
 # class RecipeViewSet(viewsets.ModelViewSet):

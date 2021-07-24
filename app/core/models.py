@@ -50,3 +50,13 @@ class Empresa(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class Motorista(models.Model):
+    """Modelo de motorista"""
+    nome = models.CharField(max_length=255)
+    cnh = models.CharField(max_length=11, unique=True)
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nome

@@ -6,6 +6,7 @@ from empresa import views
 
 router = DefaultRouter()
 router.register('empresas', views.EmpresaViewSet)
+router.register('motoristas', views.MotoristaViewSet)
 
 app_name = 'empresa'
 

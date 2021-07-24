@@ -147,12 +147,14 @@ class PrivateEmpresaApiTests(TestCase):
 
     def test_cnpj_repetido(self):
         """Testa que um CNPJ deva ser único"""
-        empresa_exemplo(nome='qualquer', cnpj='00.000.000/0001-00')
+        empresa_exemplo(nome='qualquer', cnpj='11.995.972/0001-80')
 
         payload = {
-            'nome': '',
-            'cnpj': '00.000.000/0001-00'
+            'nome': 'outra empresa',
+            'cnpj': '11.995.972/0001-80'
         }
         res = self.client.post(EMPRESA_URL, payload)
 
+        empresas = Empresa.objects.all()
+        self.assertEqual(len(empresas), 1)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)

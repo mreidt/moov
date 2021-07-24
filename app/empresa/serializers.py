@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.models import Empresa
+from core.models import Empresa, Motorista
 
 import re
 
@@ -40,4 +40,13 @@ class EmpresaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empresa
         fields = ('id', 'nome', 'cnpj')
+        read_only_fields = ('id',)
+
+
+class MotoristaSerializer(serializers.ModelSerializer):
+    """Serializer para objetos do tipo motorista"""
+
+    class Meta:
+        model = Motorista
+        fields = ('id', 'nome', 'cnh', 'empresa')
         read_only_fields = ('id',)
