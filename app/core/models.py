@@ -5,7 +5,7 @@ from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
 
 class GerenciadorUsuario(BaseUserManager):
 
-    def cria_usuario(self, email, nome, senha=None, **extra_fields):
+    def create_user(self, email, nome, password=None, **extra_fields):
         """Cria e salva um novo usuário"""
         if not email:
             raise ValueError('Usuários devem ter um email válido.')
@@ -16,7 +16,16 @@ class GerenciadorUsuario(BaseUserManager):
             nome=nome,
             **extra_fields
         )
-        usuario.set_password(senha)
+        usuario.set_password(password)
+        usuario.save(using=self._db)
+
+        return usuario
+
+    def create_superuser(self, email, password):
+        """Creates and saves a new super user"""
+        usuario = self.create_user(email=email, password=password, nome=email)
+        usuario.is_staff = True
+        usuario.is_superuser = True
         usuario.save(using=self._db)
 
         return usuario
@@ -27,7 +36,17 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     nome = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
     objects = GerenciadorUsuario()
 
     USERNAME_FIELD = 'email'
+
+
+class Empresa(models.Model):
+    """Modelo de empresa"""
+    nome = models.CharField(max_length=255)
+    cnpj = models.CharField(max_length=18, unique=True)
+
+    def __str__(self):
+        return self.nome
